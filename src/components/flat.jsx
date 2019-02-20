@@ -1,10 +1,24 @@
 import React from 'react';
 
-const Flat = ({ id, clickFunction }) => {
-  const handleClick = event => clickFunction(event.target.src.split('/')[4]);
-  if (!id) { return null; }
+const Flat = ({ flat, clickFunction }) => {
+  const {
+    name, imageUrl, price, priceCurrency
+  } = flat;
+  const handleClick = () => clickFunction(flat);
+  const style = {
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url(${imageUrl})`
+  };
+
   return (
-    <img src={link} alt="" className="flat" onClick={handleClick} />
+    <div className="card" style={style} onClick={handleClick}>
+      <div className="card-category">
+        {`${price} ${priceCurrency}`}
+      </div>
+      <div className="card-description">
+        <h2>{name}</h2>
+      </div>
+      <a className="card-link" href="#"></a>
+    </div>
   );
 };
 
