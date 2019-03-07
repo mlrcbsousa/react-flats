@@ -1,0 +1,348 @@
+[1mdiff --git a/package.json b/package.json[m
+[1mindex 4c12fcf..a42bdb8 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -32,7 +32,9 @@[m
+     "mapbox-gl": "^0.53.0",[m
+     "react": "16.2",[m
+     "react-dom": "16.2",[m
+[31m-    "react-map-gl": "^4.0.10"[m
+[32m+[m[32m    "react-map-gl": "^4.0.10",[m
+[32m+[m[32m    "react-redux": "^6.0.1",[m
+[32m+[m[32m    "redux": "^4.0.1"[m
+   },[m
+   "scripts": {[m
+     "start": "webpack-dev-server --mode development",[m
+[1mdiff --git a/src/components/app.jsx b/src/components/app.jsx[m
+[1mindex 7a8f448..b89763c 100644[m
+[1m--- a/src/components/app.jsx[m
+[1m+++ b/src/components/app.jsx[m
+[36m@@ -1,53 +1,57 @@[m
+ // external[m
+ import React, { Component } from 'react';[m
+[31m-import GoogleMapReact from 'google-map-react';[m
+[32m+[m[32m// import GoogleMapReact from 'google-map-react';[m
+ [m
+ // internal[m
+[31m-import FlatList from './flat_list';[m
+[31m-import flats from '../../data/flats';[m
+[31m-import Marker from './marker';[m
+[32m+[m[32mimport FlatList from '../containers/flat_list';[m
+[32m+[m[32mimport Map from '../containers/map';[m
+[32m+[m[32m// import flats from '../../data/flats';[m
+[32m+[m[32m// import Marker from './marker';[m
+ [m
+ [m
+ class App extends Component {[m
+[31m-  static defaultProps = {[m
+[31m-    center: {[m
+[31m-      lat: 59.95,[m
+[31m-      lng: 30.33[m
+[31m-    },[m
+[31m-    zoom: 11[m
+[31m-  };[m
+[31m-[m
+[31m-  constructor(props) {[m
+[31m-    super(props);[m
+[31m-    this.props = props;[m
+[31m-    this.state = {[m
+[31m-      flats,[m
+[31m-      selectedFlat: {}[m
+[31m-    };[m
+[31m-  }[m
+[32m+[m[32m  // static defaultProps = {[m
+[32m+[m[32m  //   center: {[m
+[32m+[m[32m  //     lat: 59.95,[m
+[32m+[m[32m  //     lng: 30.33[m
+[32m+[m[32m  //   },[m
+[32m+[m[32m  //   zoom: 11[m
+[32m+[m[32m  // };[m
+[32m+[m
+[32m+[m[32m  // constructor(props) {[m
+[32m+[m[32m  //   super(props);[m
+[32m+[m[32m  //   this.props = props;[m
+[32m+[m[32m  //   this.state = {[m
+[32m+[m[32m  //     flats,[m
+[32m+[m[32m  //     selectedFlat: {}[m
+[32m+[m[32m  //   };[m
+[32m+[m[32m  // }[m
+ [m
+[31m-  click = selectedFlat => this.setState({ selectedFlat });[m
+[32m+[m[32m  // click = selectedFlat => this.setState({ selectedFlat });[m
+ [m
+   render() {[m
+[31m-    const { flats, selectedFlat } = this.state;[m
+[31m-    const { lat, lng } = selectedFlat;[m
+[31m-    const { center, zoom } = this.props;[m
+[32m+[m[32m    // const { flats, selectedFlat } = this.state;[m
+[32m+[m[32m    // const { lat, lng } = selectedFlat;[m
+[32m+[m[32m    // const { center, zoom } = this.props;[m
+     return ([m
+[31m-      // Important! Always set the container height explicitly[m
+[31m-      <div>[m
+[31m-        <FlatList flats={flats} selectedFlat={selectedFlat} clickFunction={this.click} />[m
+[31m-        <div className="map-container">[m
+[31m-          <GoogleMapReact[m
+[31m-            bootstrapURLKeys={{ key: 'bigyolo' }}[m
+[31m-            defaultCenter={center}[m
+[31m-            defaultZoom={zoom}[m
+[31m-          >[m
+[31m-            <Marker lat={lat} lng={lng} />[m
+[31m-          </GoogleMapReact>[m
+[31m-        </div>[m
+[32m+[m[32m      <div className="row">[m
+[32m+[m[32m        <FlatList />[m
+[32m+[m[32m        <Map />[m
+       </div>[m
+     );[m
+   }[m
+ }[m
+ [m
+[32m+[m[32m// flats={flats} selectedFlat={selectedFlat} clickFunction={this.click}[m
+[32m+[m[32m// Important! Always set the container height explicitly[m
+[32m+[m[32m// <div className="map-container">[m
+[32m+[m[32m// </div>[m
+[32m+[m[32m// <GoogleMapReact[m
+[32m+[m[32m//   bootstrapURLKeys={{ key: 'bigyolo' }}[m
+[32m+[m[32m//   defaultCenter={center}[m
+[32m+[m[32m//   defaultZoom={zoom}[m
+[32m+[m[32m// >[m
+[32m+[m[32m//   <Marker lat={lat} lng={lng} />[m
+[32m+[m[32m// </GoogleMapReact>[m
+[32m+[m
+ export default App;[m
+[1mdiff --git a/src/components/flat.jsx b/src/components/flat.jsx[m
+[1mindex dca0ef5..fae2e5a 100644[m
+[1m--- a/src/components/flat.jsx[m
+[1m+++ b/src/components/flat.jsx[m
+[36m@@ -1,26 +1,34 @@[m
+[31m-import React from 'react';[m
+[32m+[m[32mimport React, { Component } from 'react';[m
+ [m
+[31m-const Flat = ({ flat, clickFunction, selectedFlat }) => {[m
+[31m-  const {[m
+[31m-    name, imageUrl, price, priceCurrency[m
+[31m-  } = flat;[m
+[31m-  const handleClick = () => clickFunction(flat);[m
+[31m-  const style = {[m
+[31m-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url(${imageUrl})`[m
+[31m-  };[m
+[31m-  const classes = `card${selectedFlat.name === name ? ' active' : ''}`;[m
+[32m+[m[32mclass Flat extends Component {[m
+[32m+[m[32m  render() {[m
+[32m+[m[32m    const { flat } = this.props;[m
+ [m
+[31m-  return ([m
+[31m-    <div className={classes} style={style} onClick={handleClick}>[m
+[31m-      <div className="card-category">[m
+[31m-        {`${price} ${priceCurrency}`}[m
+[31m-      </div>[m
+[31m-      <div className="card-description">[m
+[31m-        <h2>{name}</h2>[m
+[32m+[m[32m    const {[m
+[32m+[m[32m      name, imageUrl, price, priceCurrency[m
+[32m+[m[32m    } = flat;[m
+[32m+[m
+[32m+[m[32m    const style = {[m
+[32m+[m[32m      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url(${imageUrl})`[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    // onClick={handleClick}[m
+[32m+[m
+[32m+[m[32m    return ([m
+[32m+[m[32m      <div className="card" style={style}>[m
+[32m+[m[32m        <div className="card-category">[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m        <div className="card-description">[m
+[32m+[m[32m          <h2>{name}</h2>[m
+[32m+[m[32m          <p>{`${price} ${priceCurrency}`}</p>[m
+[32m+[m[32m        </div>[m
+       </div>[m
+[31m-      <a className="card-link" href="#" alt="card link" />[m
+[31m-    </div>[m
+[31m-  );[m
+[31m-};[m
+[32m+[m[32m    );[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// = ({ flat, clickFunction, selectedFlat }) => {[m
+[32m+[m[32m// const handleClick = () => clickFunction(flat);[m
+[32m+[m[32m// const classes = `card${selectedFlat.name === name ? ' active' : ''}`;[m
+ [m
+ export default Flat;[m
+[1mdiff --git a/src/components/flat_list.jsx b/src/components/flat_list.jsx[m
+[1mindex 6ba8ad6..3d51bf6 100644[m
+[1m--- a/src/components/flat_list.jsx[m
+[1m+++ b/src/components/flat_list.jsx[m
+[36m@@ -6,9 +6,13 @@[m [mimport Flat from './flat';[m
+ const FlatList = ({ flats, clickFunction, selectedFlat }) => {[m
+   return ([m
+     <div className="flat-list">[m
+[31m-      {flats.map(flat => <Flat key={flat.name} selectedFlat={selectedFlat} flat={flat} clickFunction={clickFunction} />) }[m
+[32m+[m[32m    TODO[m
+     </div>[m
+   );[m
+ };[m
+ [m
+ export default FlatList;[m
+[32m+[m
+[32m+[m[32m// {flats.map(flat => <Flat key={flat.name} selectedFlat={selectedFlat} flat={flat} clickFunction={clickFunction} />) }[m
+[41m+[m
+[41m+[m
+[1mdiff --git a/src/index.jsx b/src/index.jsx[m
+[1mindex 2bac983..7d5a710 100644[m
+[1m--- a/src/index.jsx[m
+[1m+++ b/src/index.jsx[m
+[36m@@ -1,17 +1,27 @@[m
+ // external[m
+ import React from 'react';[m
+ import ReactDOM from 'react-dom';[m
+[31m-import mapboxgl from 'mapbox-gl';[m
+[32m+[m[32mimport { Provider } from 'react-redux';[m
+[32m+[m[32mimport { createStore, combineReducers } from 'redux';[m
+ [m
+ // internal[m
+ import '../assets/stylesheets/application.scss';[m
+ import App from './components/app';[m
+[32m+[m[32mimport flatsReducer from './reducers/flats_reducer';[m
+ [m
+[31m-// configurations[m
+[31m-mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;[m
+[32m+[m[32m// gather reducers[m
+[32m+[m[32mconst reducers = combineReducers({[m
+[32m+[m[32m  flats: flatsReducer[m
+[32m+[m[32m});[m
+ [m
+ // load App[m
+ const root = document.getElementById('root');[m
+[32m+[m
+ if (root) {[m
+[31m-  ReactDOM.render(<App />, root);[m
+[32m+[m[32m  ReactDOM.render([m
+[32m+[m[32m    <Provider store={createStore(reducers)}>[m
+[32m+[m[32m      <App />[m
+[32m+[m[32m    </Provider>,[m
+[32m+[m[32m    root[m
+[32m+[m[32m  );[m
+ }[m
+[1mdiff --git a/templates/index.html b/templates/index.html[m
+[1mindex 9bf109b..5791bca 100644[m
+[1m--- a/templates/index.html[m
+[1m+++ b/templates/index.html[m
+[36m@@ -6,6 +6,6 @@[m
+     <title>React boilerplate</title>[m
+   </head>[m
+   <body>[m
+[31m-    <div id="root"></div>[m
+[32m+[m[32m    <div id="root" class="container-fluid"></div>[m
+   </body>[m
+ </html>[m
+[1mdiff --git a/yarn.lock b/yarn.lock[m
+[1mindex e1000a7..9e95b0c 100644[m
+[1m--- a/yarn.lock[m
+[1m+++ b/yarn.lock[m
+[36m@@ -562,6 +562,13 @@[m
+   dependencies:[m
+     regenerator-runtime "^0.12.0"[m
+ [m
+[32m+[m[32m"@babel/runtime@^7.3.1":[m
+[32m+[m[32m  version "7.3.4"[m
+[32m+[m[32m  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.3.4.tgz#73d12ba819e365fcf7fd152aed56d6df97d21c83"[m
+[32m+[m[32m  integrity sha512-IvfvnMdSaLBateu0jfsYIpZTxAc2cKEXEMiezGGN75QcBcecDUKd3PgLAncT0oOgxKy8dd8hrJKj9MfzgfZd6g==[m
+[32m+[m[32m  dependencies:[m
+[32m+[m[32m    regenerator-runtime "^0.12.0"[m
+[32m+[m
+ "@babel/template@^7.1.0", "@babel/template@^7.1.2":[m
+   version "7.1.2"[m
+   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.1.2.tgz#090484a574fef5a2d2d7726a674eceda5c5b5644"[m
+[36m@@ -3309,6 +3316,13 @@[m [mhmac-drbg@^1.0.0:[m
+     minimalistic-assert "^1.0.0"[m
+     minimalistic-crypto-utils "^1.0.1"[m
+ [m
+[32m+[m[32mhoist-non-react-statics@^3.3.0:[m
+[32m+[m[32m  version "3.3.0"[m
+[32m+[m[32m  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.0.tgz#b09178f0122184fb95acf525daaecb4d8f45958b"[m
+[32m+[m[32m  integrity sha512-0XsbTXxgiaCDYDIWFcwkmerZPSwywfUqYmwT4jzewKTQSWoE6FCMoUVOeBJWK3E/CrWbxRG3m5GzY4lnIwGRBA==[m
+[32m+[m[32m  dependencies:[m
+[32m+[m[32m    react-is "^16.7.0"[m
+[32m+[m
+ hosted-git-info@^2.1.4:[m
+   version "2.7.1"[m
+   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"[m
+[36m@@ -3535,7 +3549,7 @@[m [minterpret@^1.1.0:[m
+   version "1.1.0"[m
+   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.1.0.tgz#7ed1b1410c6a0e0f78cf95d3b8440c63f78b8614"[m
+ [m
+[31m-invariant@^2.2.2:[m
+[32m+[m[32minvariant@^2.2.2, invariant@^2.2.4:[m
+   version "2.2.4"[m
+   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"[m
+   dependencies:[m
+[36m@@ -5004,7 +5018,7 @@[m [mpromise@^7.1.1:[m
+   dependencies:[m
+     asap "~2.0.3"[m
+ [m
+[31m-prop-types@^15.5.7, prop-types@^15.6.0:[m
+[32m+[m[32mprop-types@^15.5.7, prop-types@^15.6.0, prop-types@^15.7.2:[m
+   version "15.7.2"[m
+   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"[m
+   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==[m
+[36m@@ -5167,6 +5181,11 @@[m [mreact-dom@16.2:[m
+     object-assign "^4.1.1"[m
+     prop-types "^15.6.0"[m
+ [m
+[32m+[m[32mreact-is@^16.7.0, react-is@^16.8.2:[m
+[32m+[m[32m  version "16.8.3"[m
+[32m+[m[32m  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.3.tgz#4ad8b029c2a718fc0cfc746c8d4e1b7221e5387d"[m
+[32m+[m[32m  integrity sha512-Y4rC1ZJmsxxkkPuMLwvKvlL1Zfpbcu+Bf4ZigkHup3v9EfdYhAlWAaVyA19olXq2o2mGn0w+dFKvk3pVVlYcIA==[m
+[32m+[m
+ react-is@^16.8.1:[m
+   version "16.8.1"[m
+   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.1.tgz#a80141e246eb894824fb4f2901c0c50ef31d4cdb"[m
+[36m@@ -5184,6 +5203,18 @@[m [mreact-map-gl@^4.0.10:[m
+     react-virtualized-auto-sizer "^1.0.2"[m
+     viewport-mercator-project "^6.1.0"[m
+ [m
+[32m+[m[32mreact-redux@^6.0.1:[m
+[32m+[m[32m  version "6.0.1"[m
+[32m+[m[32m  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-6.0.1.tgz#0d423e2c1cb10ada87293d47e7de7c329623ba4d"[m
+[32m+[m[32m  integrity sha512-T52I52Kxhbqy/6TEfBv85rQSDz6+Y28V/pf52vDWs1YRXG19mcFOGfHnY2HsNFHyhP+ST34Aih98fvt6tqwVcQ==[m
+[32m+[m[32m  dependencies:[m
+[32m+[m[32m    "@babel/runtime" "^7.3.1"[m
+[32m+[m[32m    hoist-non-react-statics "^3.3.0"[m
+[32m+[m[32m    invariant "^2.2.4"[m
+[32m+[m[32m    loose-envify "^1.4.0"[m
+[32m+[m[32m    prop-types "^15.7.2"[m
+[32m+[m[32m    react-is "^16.8.2"[m
+[32m+[m
+ react-virtualized-auto-sizer@^1.0.2:[m
+   version "1.0.2"[m
+   resolved "https://registry.yarnpkg.com/react-virtualized-auto-sizer/-/react-virtualized-auto-sizer-1.0.2.tgz#a61dd4f756458bbf63bd895a92379f9b70f803bd"[m
+[36m@@ -5291,6 +5322,14 @@[m [mredeyed@~0.4.0:[m
+   dependencies:[m
+     esprima "~1.0.4"[m
+ [m
+[32m+[m[32mredux@^4.0.1:[m
+[32m+[m[32m  version "4.0.1"[m
+[32m+[m[32m  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.1.tgz#436cae6cc40fbe4727689d7c8fae44808f1bfef5"[m
+[32m+[m[32m  integrity sha512-R7bAtSkk7nY6O/OYMVR9RiBI+XghjF9rlbl5806HJbQph0LJVHZrU5oaO4q70eUKiqMRqm4y07KLTlMZ2BlVmg==[m
+[32m+[m[32m  dependencies:[m
+[32m+[m[32m    loose-envify "^1.4.0"[m
+[32m+[m[32m    symbol-observable "^1.2.0"[m
+[32m+[m
+ regenerate-unicode-properties@^7.0.0:[m
+   version "7.0.0"[m
+   resolved "https://registry.yarnpkg.com/regenerate-unicode-properties/-/regenerate-unicode-properties-7.0.0.tgz#107405afcc4a190ec5ed450ecaa00ed0cafa7a4c"[m
+[36m@@ -6077,6 +6116,11 @@[m [msupports-color@^5.1.0, supports-color@^5.3.0, supports-color@^5.4.0, supports-co[m
+   dependencies:[m
+     has-flag "^3.0.0"[m
+ [m
+[32m+[m[32msymbol-observable@^1.2.0:[m
+[32m+[m[32m  version "1.2.0"[m
+[32m+[m[32m  resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"[m
+[32m+[m[32m  integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==[m
+[32m+[m
+ table@^5.0.2:[m
+   version "5.1.0"[m
+   resolved "https://registry.yarnpkg.com/table/-/table-5.1.0.tgz#69a54644f6f01ad1628f8178715b408dc6bf11f7"[m
