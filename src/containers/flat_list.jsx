@@ -1,24 +1,16 @@
 // external
-import { bindActionCreators } from 'redux';
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 // internal
-import Flat from '../components/flat';
+import { setFlats } from '../actions';
+import Flat from './flat';
 
 class FlatList extends Component {
-  static defaultProps = {
-    flats: [{
-      name: "Charm at the Steps of the Sacre Coeur/Montmartre",
-      imageUrl: "https://raw.githubusercontent.com/lewagon/flats-boilerplate/master/images/flat1.jpg",
-      price: 164,
-      priceCurrency: "EUR",
-      lat: 48.884211,
-      lng: 2.34689
-    }]
-  }
-
   componentWillMount() {
-    // dispatch an action to update the Reux State tree (flats)
+    // dispatch an action to update the Redux State tree (flats)
+    this.props.setFlats();
   }
 
   render() {
@@ -31,13 +23,20 @@ class FlatList extends Component {
     );
   }
 }
-// =
-// ({ flats, clickFunction, selectedFlat }) => {
-//   return (
-//     <div className="flat-list">
-//       {flats.map(flat => <Flat key={flat.name} selectedFlat={selectedFlat} flat={flat} clickFunction={clickFunction} />) }
-//     </div>
-//   );
-// };
 
-export default FlatList;
+// binds action to props, making it available
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    { setFlats },
+    dispatch
+  );
+}
+
+// maps state to props, making it available
+function mapStateToProps(state) {
+  return {
+    flats: state.flats
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FlatList);
