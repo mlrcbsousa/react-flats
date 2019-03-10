@@ -20,7 +20,7 @@ class Flat extends Component {
     if (flat === selectedFlat) { classes += " selected"; }
 
     return (
-      <div className={classes} style={style} onClick={selectFlat(flat)}>
+      <div className={classes} style={style} onClick={() => selectFlat(flat)}>
         <div className="card-description">
           <h2>{name}</h2>
           <p>{`${price} ${priceCurrency}`}</p>
