@@ -26,20 +26,19 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10"
   },
-  "dependencies": {
-    "dotenv": "^6.2.0",
-    "google-map-react": "^1.1.2",
-    "mapbox-gl": "^0.53.0",
-    "prop-types": "^15.7.2",
-    "react": "^16.8.4",
-    "react-dom": "16.2",
-    "react-map-gl": "^4.0.10",
-    "react-redux": "^6.0.1",
-    "redux": "^4.0.1"
-  },
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "lint": "eslint './src/**/*.js*'",
     "deploy": "webpack -p && gh-pages -d dist"
+  },
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "google-map-react": "^1.1.2",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-redux": "^6.0.1",
+    "react-scripts": "^2.1.8",
+    "redux": "^4.0.1"
   }
 }

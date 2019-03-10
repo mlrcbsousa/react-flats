@@ -30,11 +30,11 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  .card {
-    width: calc(50% - 10px);
-    margin-right: 10px;
-    margin-bottom: 10px;
-  }
+  // .card {
+  //   width: calc(50% - 10px);
+  //   margin-right: 10px;
+  //   margin-bottom: 10px;
+  // }
 }
 
 .marker {
@@ -42,4 +42,14 @@ body {
   width: 20px;
   background-color: red;
   border-radius: 50%;
+}
+
+.flat {
+  flex: 50% 0 0;
+  cursor: pointer;
+  border: 6px solid transparent;
+}
+
+.flat.selected {
+  border: 6px red dashed;
 }
