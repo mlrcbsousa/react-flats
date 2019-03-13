@@ -10,7 +10,9 @@ import Flat from './flat';
 class FlatList extends Component {
   componentWillMount() {
     // dispatch an action to update the Redux State tree (flats)
-    this.props.setFlats();
+    const { setFlats } = this.props;
+    // setTimeout(() => setFlats(), 3000);
+    setFlats();
   }
 
   render() {

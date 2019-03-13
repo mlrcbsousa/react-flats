@@ -1,4 +1,6 @@
 // flats_reducer.jsx
+import { SET_FLATS } from '../actions';
+
 // function that receives an action and the current state
 export default function(state, action) { // partial state, state that the reducer is responsible for
   if (state === undefined) {
@@ -7,7 +9,7 @@ export default function(state, action) { // partial state, state that the reduce
 
   // Handle actions
   switch (action.type) {
-    case 'SET_FLATS':
+    case SET_FLATS:
       return action.payload;
     default:
       return state;
